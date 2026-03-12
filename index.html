@@ -5,15 +5,11 @@
     <title>صفحة النخبة - The Elite Page</title>
     <style>
         body { font-family: sans-serif; background: #1A1A1A; color: #FFF; text-align: center; margin: 0; }
-        .header { background: #2F4F4F; padding: 30px; border-bottom: 5px solid #DAA520; }
+        .header { background: #2F4F4F; padding: 30px 20px; border-bottom: 5px solid #DAA520; }
         h1 { font-size: 3em; color: #DAA520; margin: 0; }
-        .contact { margin: 20px 0; font-size: 1.5em; }
+        .contact { margin-top: 15px; font-size: 1.2em; }
         .contact a { color: #DAA520; text-decoration: none; }
-        
-        /* تصميم الشبكة */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(10px, 1fr)); gap: 1px; margin: 20px auto; max-width: 1200px; }
-        .pixel { width: 10px; height: 10px; background: #333; }
-        .pixel img { width: 100%; height: 100%; object-fit: cover; }
+        #pixelCanvas { cursor: pointer; display: block; margin: 20px auto; border: 1px solid #444; background: #333; }
     </style>
 </head>
 <body>
@@ -24,19 +20,54 @@
             <a href="https://www.facebook.com/profile.php?id=61587773337715" target="_blank">تواصل معنا عبر فيسبوك</a>
         </div>
     </div>
-
-    <div class="grid" id="grid"></div>
+    <canvas id="pixelCanvas"></canvas>
 
     <script>
-        const grid = document.getElementById('grid');
-        // بناء المليون بكسل
-        for (let i = 1; i <= 1000000; i++) {
-            const div = document.createElement('div');
-            div.className = 'pixel';
-            // ربط أوتوماتيكي بالصور في مجلد images
-            div.innerHTML = `<img src="images/${i}.jpg" onerror="this.style.display='none'">`;
-            grid.appendChild(div);
+        const canvas = document.getElementById('pixelCanvas');
+        const ctx = canvas.getContext('2d');
+        const pixelSize = 10;
+        const cols = 1000;
+        const rows = 1000;
+        canvas.width = cols * pixelSize;
+        canvas.height = rows * pixelSize;
+
+        // دالة رسم الشبكة الأساسية (الرمادية)
+        function drawGrid() {
+            ctx.fillStyle = "#333";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = "#444";
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i <= canvas.width; i += pixelSize) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+            }
+            for (let i = 0; i <= canvas.height; i += pixelSize) {
+                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
+            }
         }
+        drawGrid();
+
+        // دالة لجلب الصور من مجلد images (لو موجودة)
+        function loadPixelImage(pixelId, imgUrl) {
+            let img = new Image();
+            img.src = imgUrl;
+            img.onload = function() {
+                let x = ((pixelId - 1) % cols) * pixelSize;
+                let y = Math.floor((pixelId - 1) / cols) * pixelSize;
+                ctx.drawImage(img, x, y, pixelSize - 1, pixelSize - 1);
+            };
+        }
+
+        // هنا السحر: لو رفعت صورة باسم 1.jpg في مجلد images، هتظهر أوتوماتيك!
+        // ضيف السطر ده لأي صورة ترفعها:
+        loadPixelImage(1, 'images/1.jpg'); 
+        
+        canvas.addEventListener('click', function(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = Math.floor((e.clientX - rect.left) / pixelSize);
+            const y = Math.floor((e.clientY - rect.top) / pixelSize);
+            const pixelId = (y * cols) + x + 1;
+            alert("رقم البكسل: " + pixelId + "\nللحجز تواصل معنا!");
+        });
     </script>
 </body>
 </html>
