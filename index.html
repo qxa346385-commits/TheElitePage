@@ -2,14 +2,19 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>صفحة النخبة - The Elite Page</title>
     <style>
-        body { font-family: sans-serif; background: #1A1A1A; color: #FFF; text-align: center; margin: 0; }
-        .header { background: #2F4F4F; padding: 30px 20px; border-bottom: 5px solid #DAA520; }
-        h1 { font-size: 3em; color: #DAA520; margin: 0; }
-        .contact { margin-top: 15px; font-size: 1.2em; }
-        .contact a { color: #DAA520; text-decoration: none; }
-        #pixelCanvas { cursor: pointer; display: block; margin: 20px auto; border: 1px solid #444; background: #333; }
+        body { font-family: sans-serif; background: #1A1A1A; color: #FFF; text-align: center; margin: 0; padding: 0; }
+        
+        /* جعل الهيدر بعرض الصفحة بالكامل */
+        .header { background: #2F4F4F; padding: 20px 0; border-bottom: 5px solid #DAA520; width: 100%; box-sizing: border-box; }
+        
+        h1 { font-size: 2.5em; color: #DAA520; margin: 0; }
+        .contact { margin-top: 10px; font-size: 1.2em; }
+        .contact a { color: #DAA520; text-decoration: none; font-weight: bold; }
+        
+        #pixelCanvas { cursor: pointer; display: block; margin: 20px auto; border: 1px solid #444; background: #333; max-width: 100%; }
     </style>
 </head>
 <body>
@@ -31,42 +36,25 @@
         canvas.width = cols * pixelSize;
         canvas.height = rows * pixelSize;
 
-        // دالة رسم الشبكة الأساسية (الرمادية)
-        function drawGrid() {
-            ctx.fillStyle = "#333";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = "#444";
-            ctx.lineWidth = 0.5;
-            for (let i = 0; i <= canvas.width; i += pixelSize) {
-                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
-            }
-            for (let i = 0; i <= canvas.height; i += pixelSize) {
-                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
-            }
+        // رسم الشبكة
+        ctx.fillStyle = "#333";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = "#444";
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i <= canvas.width; i += pixelSize) {
+            ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
         }
-        drawGrid();
-
-        // دالة لجلب الصور من مجلد images (لو موجودة)
-        function loadPixelImage(pixelId, imgUrl) {
-            let img = new Image();
-            img.src = imgUrl;
-            img.onload = function() {
-                let x = ((pixelId - 1) % cols) * pixelSize;
-                let y = Math.floor((pixelId - 1) / cols) * pixelSize;
-                ctx.drawImage(img, x, y, pixelSize - 1, pixelSize - 1);
-            };
+        for (let i = 0; i <= canvas.height; i += pixelSize) {
+            ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
         }
 
-        // هنا السحر: لو رفعت صورة باسم 1.jpg في مجلد images، هتظهر أوتوماتيك!
-        // ضيف السطر ده لأي صورة ترفعها:
-        loadPixelImage(1, 'images/1.jpg'); 
-        
+        // التعديل هنا: رسالة البكسل
         canvas.addEventListener('click', function(e) {
             const rect = canvas.getBoundingClientRect();
-            const x = Math.floor((e.clientX - rect.left) / pixelSize);
-            const y = Math.floor((e.clientY - rect.top) / pixelSize);
+            const x = Math.floor((e.clientX - rect.left) / (canvas.clientWidth / cols));
+            const y = Math.floor((e.clientY - rect.top) / (canvas.clientHeight / rows));
             const pixelId = (y * cols) + x + 1;
-            alert("رقم البكسل: " + pixelId + "\nللحجز تواصل معنا!");
+            alert("أنت اخترت البكسل رقم: " + pixelId + "\n\nاحجز مكانك في النخبة الآن!");
         });
     </script>
 </body>
