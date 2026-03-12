@@ -7,22 +7,25 @@
     <style>
         body { font-family: sans-serif; background: #1A1A1A; color: #FFF; text-align: center; margin: 0; padding: 0; }
         
-        /* جعل الهيدر بعرض الصفحة بالكامل */
         .header { background: #2F4F4F; padding: 20px 0; border-bottom: 5px solid #DAA520; width: 100%; box-sizing: border-box; }
-        
         h1 { font-size: 2.5em; color: #DAA520; margin: 0; }
-        .contact { margin-top: 10px; font-size: 1.2em; }
-        .contact a { color: #DAA520; text-decoration: none; font-weight: bold; }
         
-        #pixelCanvas { cursor: pointer; display: block; margin: 20px auto; border: 1px solid #444; background: #333; max-width: 100%; }
+        /* تنسيق جملة التواصل الجديدة */
+        .contact { margin-top: 10px; font-size: 0.9em; color: #EEE; }
+        .contact a { color: #DAA520; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: bold; }
+        .fb-icon { width: 22px; height: 22px; vertical-align: middle; }
+
+        #pixelCanvas { cursor: pointer; display: block; margin: 20px auto; border: 1px solid #444; background: #333; max-width: 95%; }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>THE ELITE PAGE</h1>
-        <h2>صفحة النخبة</h2>
         <div class="contact">
-            <a href="https://www.facebook.com/profile.php?id=61587773337715" target="_blank">تواصل معنا عبر فيسبوك</a>
+            <a href="https://www.facebook.com/profile.php?id=61587773337715" target="_blank">
+                للحجز تواصل معنا 
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" class="fb-icon" alt="FB">
+            </a>
         </div>
     </div>
     <canvas id="pixelCanvas"></canvas>
@@ -48,7 +51,7 @@
             ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
         }
 
-        // التعديل هنا: رسالة البكسل
+        // التنبيه عند الضغط
         canvas.addEventListener('click', function(e) {
             const rect = canvas.getBoundingClientRect();
             const x = Math.floor((e.clientX - rect.left) / (canvas.clientWidth / cols));
